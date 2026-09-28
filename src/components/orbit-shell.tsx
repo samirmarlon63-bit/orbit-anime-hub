@@ -1,5 +1,5 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import { Compass, Bookmark, Clapperboard, Settings2, Orbit, ArrowLeft } from 'lucide-react'
+import { Compass, Bookmark, Settings2, Orbit, ArrowLeft, Video } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { ReactNode } from 'react'
 
@@ -7,7 +7,7 @@ export function Shell({ children, title, subtitle, back }: { children?: ReactNod
   const path = useRouterState({ select: s => s.location.pathname })
   const tabs = [
     { to: '/', icon: Compass, label: 'Nuevos' },
-    { to: '/videos', icon: Clapperboard, label: 'Videos' },
+    { to: '/videos', icon: Video, label: 'Videos' },
     { to: '/guardados', icon: Bookmark, label: 'Guardados' },
     { to: '/configuracion', icon: Settings2, label: 'Configuración' },
   ] as const
@@ -46,8 +46,12 @@ export function Shell({ children, title, subtitle, back }: { children?: ReactNod
         {tabs.map(({ to, icon: Icon, label }) => {
           const isActive = path === to
           return (
-            <Link key={to} to={to} className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-[11px] font-medium transition ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
-              <Icon size={18} />
+            <Link
+              key={to}
+              to={to}
+              className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-[11px] font-medium transition ${isActive ? 'text-primary' : 'text-muted-foreground'}`}
+            >
+              <Icon size={18} strokeWidth={2.2} />
               <span>{label}</span>
             </Link>
           )
