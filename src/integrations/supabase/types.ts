@@ -14,16 +14,533 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      anime_changes: {
+        Row: {
+          anime_id: string
+          conflict: boolean
+          created_at: string
+          field: string
+          id: string
+          new_value: Json | null
+          old_value: Json | null
+          source_name: string
+        }
+        Insert: {
+          anime_id: string
+          conflict?: boolean
+          created_at?: string
+          field: string
+          id?: string
+          new_value?: Json | null
+          old_value?: Json | null
+          source_name: string
+        }
+        Update: {
+          anime_id?: string
+          conflict?: boolean
+          created_at?: string
+          field?: string
+          id?: string
+          new_value?: Json | null
+          old_value?: Json | null
+          source_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "anime_changes_anime_id_fkey"
+            columns: ["anime_id"]
+            isOneToOne: false
+            referencedRelation: "animes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      animes: {
+        Row: {
+          airing_at: string | null
+          anilist_id: number | null
+          cover_url: string | null
+          data_sources: Json
+          date_confirmed: boolean
+          first_detected_at: string
+          genres: string[]
+          id: string
+          last_checked_at: string
+          mal_id: number | null
+          platforms: string[]
+          popularity: number | null
+          release_at: string | null
+          search_keys: string[]
+          season: string | null
+          source_name: string
+          source_url: string | null
+          status: string | null
+          studio: string | null
+          synonyms: string[]
+          synopsis: string | null
+          title_english: string | null
+          title_native: string | null
+          title_romaji: string
+          updated_at: string
+        }
+        Insert: {
+          airing_at?: string | null
+          anilist_id?: number | null
+          cover_url?: string | null
+          data_sources?: Json
+          date_confirmed?: boolean
+          first_detected_at?: string
+          genres?: string[]
+          id?: string
+          last_checked_at?: string
+          mal_id?: number | null
+          platforms?: string[]
+          popularity?: number | null
+          release_at?: string | null
+          search_keys?: string[]
+          season?: string | null
+          source_name?: string
+          source_url?: string | null
+          status?: string | null
+          studio?: string | null
+          synonyms?: string[]
+          synopsis?: string | null
+          title_english?: string | null
+          title_native?: string | null
+          title_romaji: string
+          updated_at?: string
+        }
+        Update: {
+          airing_at?: string | null
+          anilist_id?: number | null
+          cover_url?: string | null
+          data_sources?: Json
+          date_confirmed?: boolean
+          first_detected_at?: string
+          genres?: string[]
+          id?: string
+          last_checked_at?: string
+          mal_id?: number | null
+          platforms?: string[]
+          popularity?: number | null
+          release_at?: string | null
+          search_keys?: string[]
+          season?: string | null
+          source_name?: string
+          source_url?: string | null
+          status?: string | null
+          studio?: string | null
+          synonyms?: string[]
+          synopsis?: string | null
+          title_english?: string | null
+          title_native?: string | null
+          title_romaji?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      discoveries: {
+        Row: {
+          anime_id: string | null
+          details: Json
+          detected_at: string
+          id: string
+          last_checked_at: string
+          source_name: string
+          source_url: string | null
+          title: string
+        }
+        Insert: {
+          anime_id?: string | null
+          details?: Json
+          detected_at?: string
+          id?: string
+          last_checked_at?: string
+          source_name: string
+          source_url?: string | null
+          title: string
+        }
+        Update: {
+          anime_id?: string | null
+          details?: Json
+          detected_at?: string
+          id?: string
+          last_checked_at?: string
+          source_name?: string
+          source_url?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discoveries_anime_id_fkey"
+            columns: ["anime_id"]
+            isOneToOne: false
+            referencedRelation: "animes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      news_sources: {
+        Row: {
+          base_url: string
+          created_at: string
+          enabled: boolean
+          id: string
+          last_checked_at: string | null
+          last_error: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          base_url: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          last_checked_at?: string | null
+          last_error?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          base_url?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          last_checked_at?: string | null
+          last_error?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          notifications: Json
+          theme: string
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          notifications?: Json
+          theme?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          notifications?: Json
+          theme?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      saved_animes: {
+        Row: {
+          anime_id: string
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          anime_id: string
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          anime_id?: string
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_animes_anime_id_fkey"
+            columns: ["anime_id"]
+            isOneToOne: false
+            referencedRelation: "animes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sync_runs: {
+        Row: {
+          errors: Json
+          finished_at: string | null
+          id: string
+          started_at: string
+          stats: Json
+          status: string
+          trigger: string
+        }
+        Insert: {
+          errors?: Json
+          finished_at?: string | null
+          id?: string
+          started_at?: string
+          stats?: Json
+          status?: string
+          trigger: string
+        }
+        Update: {
+          errors?: Json
+          finished_at?: string | null
+          id?: string
+          started_at?: string
+          stats?: Json
+          status?: string
+          trigger?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      video_animes: {
+        Row: {
+          anime_id: string | null
+          cover_url: string | null
+          created_at: string
+          episodes_total: number | null
+          external_slug: string | null
+          id: string
+          last_sync_error: string | null
+          last_synced_at: string | null
+          source_name: string | null
+          status: string
+          synopsis: string | null
+          title: string
+          updated_at: string
+          youtube_playlist_id: string | null
+        }
+        Insert: {
+          anime_id?: string | null
+          cover_url?: string | null
+          created_at?: string
+          episodes_total?: number | null
+          external_slug?: string | null
+          id?: string
+          last_sync_error?: string | null
+          last_synced_at?: string | null
+          source_name?: string | null
+          status?: string
+          synopsis?: string | null
+          title: string
+          updated_at?: string
+          youtube_playlist_id?: string | null
+        }
+        Update: {
+          anime_id?: string | null
+          cover_url?: string | null
+          created_at?: string
+          episodes_total?: number | null
+          external_slug?: string | null
+          id?: string
+          last_sync_error?: string | null
+          last_synced_at?: string | null
+          source_name?: string | null
+          status?: string
+          synopsis?: string | null
+          title?: string
+          updated_at?: string
+          youtube_playlist_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_animes_anime_id_fkey"
+            columns: ["anime_id"]
+            isOneToOne: false
+            referencedRelation: "animes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      video_changes: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          new_value: Json | null
+          old_value: Json | null
+          source_name: string | null
+          video_anime_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          new_value?: Json | null
+          old_value?: Json | null
+          source_name?: string | null
+          video_anime_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          new_value?: Json | null
+          old_value?: Json | null
+          source_name?: string | null
+          video_anime_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_changes_video_anime_id_fkey"
+            columns: ["video_anime_id"]
+            isOneToOne: false
+            referencedRelation: "video_animes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      video_episodes: {
+        Row: {
+          created_at: string
+          id: string
+          number: number
+          title: string | null
+          updated_at: string
+          video_anime_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          number: number
+          title?: string | null
+          updated_at?: string
+          video_anime_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          number?: number
+          title?: string | null
+          updated_at?: string
+          video_anime_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_episodes_video_anime_id_fkey"
+            columns: ["video_anime_id"]
+            isOneToOne: false
+            referencedRelation: "video_animes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      video_sources: {
+        Row: {
+          created_at: string
+          episode_id: string
+          id: string
+          kind: string
+          label: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          episode_id: string
+          id?: string
+          kind: string
+          label: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          episode_id?: string
+          id?: string
+          kind?: string
+          label?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_sources_episode_id_fkey"
+            columns: ["episode_id"]
+            isOneToOne: false
+            referencedRelation: "video_episodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      video_sources_catalog: {
+        Row: {
+          base_url: string
+          created_at: string
+          enabled: boolean
+          id: string
+          kind: string
+          last_checked_at: string | null
+          last_error: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          base_url: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          kind: string
+          last_checked_at?: string | null
+          last_error?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          base_url?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          kind?: string
+          last_checked_at?: string | null
+          last_error?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +667,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
