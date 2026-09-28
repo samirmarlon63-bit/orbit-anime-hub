@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Public anime and video catalogues use read-only RLS access; personal saves and preferences stay owner-scoped, while administration uses separate role rows and server verification, because catalogue browsing must not require login.
+- Synchronization logic lives in server-only helpers and public cron routes require a shared scheduler credential, because external ingestion must not execute in browsers.
