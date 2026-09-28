@@ -2,7 +2,7 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import { Compass, Bookmark, Settings2, Orbit, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { ReactNode } from 'react'
-export function Shell({ children, title, subtitle, back }: { children: ReactNode; title: string; subtitle?: string; back?: string }) {
+export function Shell({ children, title, subtitle, back }: { children?: ReactNode; title: string; subtitle?: string; back?: string }) {
   const path = useRouterState({ select: s => s.location.pathname })
   const tabs = [{to:'/',icon:Compass,label:'Nuevos'}, {to:'/guardados',icon:Bookmark,label:'Guardados'}, {to:'/configuracion',icon:Settings2,label:'Configuración'}] as const
   return <div className="min-h-dvh bg-background pb-36"><div className="mx-auto max-w-5xl px-5 pt-[max(38px,env(safe-area-inset-top))] sm:px-8">

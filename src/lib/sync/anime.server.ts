@@ -12,7 +12,7 @@ export async function runAnimeSync(trigger: string) {
       const response = await fetch('https://graphql.anilist.co', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query: `query($page:Int){Page(page:$page,perPage:25){media(type:ANIME,sort:START_DATE,seasonYear:2026){id idMal title{romaji english native} synonyms coverImage{extraLarge} description(asHtml:false) genres studios(isMain:true){nodes{name}} season seasonYear startDate{year month day} nextAiringEpisode{airingAt episode} status popularity siteUrl}}}`, variables: { page } }) })
       if (!response.ok) throw new Error(`AniList HTTP ${response.status}`)
       const payload = await response.json() as { data?: { Page?: { media?: AniNode[] } }; errors?: { message: string }[] }
-      if (payload.errors?.length) throw new Error(payload.errors[0].message)
+      if (payload.errors?.length) throw new Error(payload.errors[0]?.message ?? 'AniList error')
       for (const item of payload.data?.Page?.media ?? []) {
         stats.processed++
         const { data: existing } = await supabaseAdmin.from('animes').select('id,release_at,date_confirmed').eq('anilist_id', item.id).maybeSingle()
