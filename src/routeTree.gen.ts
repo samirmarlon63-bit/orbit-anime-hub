@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicSyncRouteImport } from './routes/api/public/sync'
+import { Route as ApiPublicSyncVideosRouteImport } from './routes/api/public/sync-videos'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicSyncRoute = ApiPublicSyncRouteImport.update({
+  id: '/api/public/sync',
+  path: '/api/public/sync',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicSyncVideosRoute = ApiPublicSyncVideosRouteImport.update({
+  id: '/api/public/sync-videos',
+  path: '/api/public/sync-videos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/public/sync': typeof ApiPublicSyncRoute
+  '/api/public/sync-videos': typeof ApiPublicSyncVideosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/public/sync': typeof ApiPublicSyncRoute
+  '/api/public/sync-videos': typeof ApiPublicSyncVideosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/public/sync': typeof ApiPublicSyncRoute
+  '/api/public/sync-videos': typeof ApiPublicSyncVideosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/api/public/sync' | '/api/public/sync-videos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/api/public/sync' | '/api/public/sync-videos'
+  id: '__root__' | '/' | '/api/public/sync' | '/api/public/sync-videos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiPublicSyncRoute: typeof ApiPublicSyncRoute
+  ApiPublicSyncVideosRoute: typeof ApiPublicSyncVideosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/sync': {
+      id: '/api/public/sync'
+      path: '/api/public/sync'
+      fullPath: '/api/public/sync'
+      preLoaderRoute: typeof ApiPublicSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/sync-videos': {
+      id: '/api/public/sync-videos'
+      path: '/api/public/sync-videos'
+      fullPath: '/api/public/sync-videos'
+      preLoaderRoute: typeof ApiPublicSyncVideosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiPublicSyncRoute: ApiPublicSyncRoute,
+  ApiPublicSyncVideosRoute: ApiPublicSyncVideosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
