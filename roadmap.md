@@ -1,4 +1,4 @@
 - [x] Cloud schema, roles, profiles, bookmarks, videos, and audit tables.
 - [ ] AniList/Jikan synchronization, video sync, protected endpoints, and scheduling.
-- [ ] iPhone-styled discovery, bookmarks, videos, settings, authentication, and admin.
+- [x] iPhone-styled discovery, bookmarks, videos, settings, authentication, and admin.
 - [ ] Verify browser flow and build signals.
