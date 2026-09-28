@@ -1,0 +1,32 @@
+name = "orbit-anime-hub"
+main = "src/server.ts"
+site = { directory = "dist/public" }
+
+[env.production]
+name = "orbit-anime-hub-production"
+routes = [
+  { pattern = "animex-sable.vercel.app/*", zone_name = "vercel.app" }
+]
+
+[triggers]
+crons = [
+  "0 */2 * * *"
+]
+
+[build]
+command = "bun run build"
+cwd = "."
+
+[build.upload]
+format = "service-worker"
+
+[vars]
+ENVIRONMENT = "production"
+
+[env.production.vars]
+SUPABASE_URL = ""
+SUPABASE_PUBLISHABLE_KEY = ""
+
+[env.production.secrets]
+SUPABASE_SERVICE_ROLE_KEY = ""
+CRON_SECRET = ""
