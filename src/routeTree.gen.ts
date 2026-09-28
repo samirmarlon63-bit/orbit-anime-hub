@@ -10,33 +10,153 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ConfiguracionRouteImport } from './routes/configuracion'
+import { Route as GuardadosRouteImport } from './routes/guardados'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as VideosRouteImport } from './routes/videos'
+import { Route as VideosIdRouteImport } from './routes/videos.$id'
+import { Route as ApiPublicSyncRouteImport } from './routes/api/public/sync'
+import { Route as ApiPublicSyncVideosRouteImport } from './routes/api/public/sync-videos'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfiguracionRoute = ConfiguracionRouteImport.update({
+  id: '/configuracion',
+  path: '/configuracion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuardadosRoute = GuardadosRouteImport.update({
+  id: '/guardados',
+  path: '/guardados',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VideosRoute = VideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VideosIdRoute = VideosIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => VideosRoute,
+} as any)
+const ApiPublicSyncRoute = ApiPublicSyncRouteImport.update({
+  id: '/api/public/sync',
+  path: '/api/public/sync',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicSyncVideosRoute = ApiPublicSyncVideosRouteImport.update({
+  id: '/api/public/sync-videos',
+  path: '/api/public/sync-videos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/auth': typeof AuthRoute
+  '/configuracion': typeof ConfiguracionRoute
+  '/guardados': typeof GuardadosRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/videos': typeof VideosRouteWithChildren
+  '/videos/$id': typeof VideosIdRoute
+  '/api/public/sync': typeof ApiPublicSyncRoute
+  '/api/public/sync-videos': typeof ApiPublicSyncVideosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/auth': typeof AuthRoute
+  '/configuracion': typeof ConfiguracionRoute
+  '/guardados': typeof GuardadosRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/videos': typeof VideosRouteWithChildren
+  '/videos/$id': typeof VideosIdRoute
+  '/api/public/sync': typeof ApiPublicSyncRoute
+  '/api/public/sync-videos': typeof ApiPublicSyncVideosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/auth': typeof AuthRoute
+  '/configuracion': typeof ConfiguracionRoute
+  '/guardados': typeof GuardadosRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/videos': typeof VideosRouteWithChildren
+  '/videos/$id': typeof VideosIdRoute
+  '/api/public/sync': typeof ApiPublicSyncRoute
+  '/api/public/sync-videos': typeof ApiPublicSyncVideosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/configuracion'
+    | '/guardados'
+    | '/reset-password'
+    | '/videos'
+    | '/videos/$id'
+    | '/api/public/sync'
+    | '/api/public/sync-videos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/configuracion'
+    | '/guardados'
+    | '/reset-password'
+    | '/videos'
+    | '/videos/$id'
+    | '/api/public/sync'
+    | '/api/public/sync-videos'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/configuracion'
+    | '/guardados'
+    | '/reset-password'
+    | '/videos'
+    | '/videos/$id'
+    | '/api/public/sync'
+    | '/api/public/sync-videos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  AuthRoute: typeof AuthRoute
+  ConfiguracionRoute: typeof ConfiguracionRoute
+  GuardadosRoute: typeof GuardadosRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  VideosRoute: typeof VideosRouteWithChildren
+  ApiPublicSyncRoute: typeof ApiPublicSyncRoute
+  ApiPublicSyncVideosRoute: typeof ApiPublicSyncVideosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +168,93 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/configuracion': {
+      id: '/configuracion'
+      path: '/configuracion'
+      fullPath: '/configuracion'
+      preLoaderRoute: typeof ConfiguracionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guardados': {
+      id: '/guardados'
+      path: '/guardados'
+      fullPath: '/guardados'
+      preLoaderRoute: typeof GuardadosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/videos': {
+      id: '/videos'
+      path: '/videos'
+      fullPath: '/videos'
+      preLoaderRoute: typeof VideosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/videos/$id': {
+      id: '/videos/$id'
+      path: '/$id'
+      fullPath: '/videos/$id'
+      preLoaderRoute: typeof VideosIdRouteImport
+      parentRoute: typeof VideosRoute
+    }
+    '/api/public/sync': {
+      id: '/api/public/sync'
+      path: '/api/public/sync'
+      fullPath: '/api/public/sync'
+      preLoaderRoute: typeof ApiPublicSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/sync-videos': {
+      id: '/api/public/sync-videos'
+      path: '/api/public/sync-videos'
+      fullPath: '/api/public/sync-videos'
+      preLoaderRoute: typeof ApiPublicSyncVideosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface VideosRouteChildren {
+  VideosIdRoute: typeof VideosIdRoute
+}
+
+const VideosRouteChildren: VideosRouteChildren = {
+  VideosIdRoute: VideosIdRoute,
+}
+
+const VideosRouteWithChildren =
+  VideosRoute._addFileChildren(VideosRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  AuthRoute: AuthRoute,
+  ConfiguracionRoute: ConfiguracionRoute,
+  GuardadosRoute: GuardadosRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  VideosRoute: VideosRouteWithChildren,
+  ApiPublicSyncRoute: ApiPublicSyncRoute,
+  ApiPublicSyncVideosRoute: ApiPublicSyncVideosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

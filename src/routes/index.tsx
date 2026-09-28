@@ -1,24 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
-
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
-export const Route = createFileRoute("/")({
-  component: Index,
-});
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
+import { createFileRoute } from '@tanstack/react-router'
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
+import { getHome } from '@/lib/orbit.functions'
+import { Shell,Empty } from '@/components/orbit-shell'
+import { AnimeRow, type Anime } from '@/components/anime-row'
+const options=queryOptions({queryKey:['home'],queryFn:()=>getHome(),staleTime:300000})
+export const Route=createFileRoute('/')({head:()=>({meta:[{title:'Nuevos estrenos — Anime Orbit'},{name:'description',content:'Descubre próximos estrenos de anime, fechas, estudios y novedades en Anime Orbit.'},{property:'og:title',content:'Nuevos estrenos — Anime Orbit'},{property:'og:description',content:'Descubre próximos estrenos de anime y sus fechas confirmadas.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary_large_image'}]}),loader:({context})=>context.queryClient.ensureQueryData(options),component:Home,errorComponent:()=> <Shell title="Nuevos"><Empty title="No pudimos cargar los estrenos" detail="Vuelve a intentarlo en un momento."/></Shell>})
+function Home(){const {data}=useSuspenseQuery(options);const upcoming=(data.animes as Anime[]).filter(a=>!a.release_at || new Date(a.release_at).getTime()>=Date.now()-86400000);return <Shell title="Nuevos" subtitle="Los próximos mundos por descubrir."><div className="mb-3 flex items-center justify-between border-b border-border pb-4"><span className="text-xs font-medium text-muted-foreground">PRÓXIMOS ESTRENOS</span><span className="text-xs text-primary">{upcoming.length} títulos</span></div>{upcoming.length?upcoming.map(a=><AnimeRow key={a.id} anime={a}/>):<Empty title="El universo se está actualizando" detail="Todavía no hay estrenos verificados. La próxima sincronización incorporará las novedades de AniList y Jikan."/>}</Shell>}
