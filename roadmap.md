@@ -1,4 +1,6 @@
 - [x] Cloud schema, roles, profiles, bookmarks, videos, and audit tables.
-- [ ] AniList/Jikan synchronization, video sync, protected endpoints, and scheduling.
+- [x] AniList/Jikan synchronization, video sync, and protected endpoints.
+- [ ] Activate a secure two-hour scheduled job for both syncs; needs a supported job configuration with protected credential.
 - [x] iPhone-styled discovery, bookmarks, videos, settings, authentication, and admin.
-- [ ] Verify browser flow and build signals.
+- [x] Verify public browser screens and build signals.
+- [ ] Verify signed-in saves and admin actions with an administrator account and a compatible real video source.
