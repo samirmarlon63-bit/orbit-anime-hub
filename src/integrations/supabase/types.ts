@@ -139,6 +139,81 @@ export type Database = {
         }
         Relationships: []
       }
+      app_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      discovered_episodes: {
+        Row: {
+          anime_id: string
+          anime_title: string
+          detected_at: string
+          episode: number
+          id: string
+          is_new: boolean
+          lang: string
+          provider_id: string
+          type: string
+          url: string
+          video_anime_id: string | null
+        }
+        Insert: {
+          anime_id: string
+          anime_title: string
+          detected_at?: string
+          episode: number
+          id: string
+          is_new?: boolean
+          lang: string
+          provider_id: string
+          type: string
+          url: string
+          video_anime_id?: string | null
+        }
+        Update: {
+          anime_id?: string
+          anime_title?: string
+          detected_at?: string
+          episode?: number
+          id?: string
+          is_new?: boolean
+          lang?: string
+          provider_id?: string
+          type?: string
+          url?: string
+          video_anime_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discovered_episodes_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "source_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discovered_episodes_video_anime_id_fkey"
+            columns: ["video_anime_id"]
+            isOneToOne: false
+            referencedRelation: "video_animes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       discoveries: {
         Row: {
           anime_id: string | null
@@ -271,6 +346,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      source_providers: {
+        Row: {
+          base_url: string
+          config: Json
+          created_at: string
+          enabled: boolean
+          id: string
+          last_scan_at: string | null
+          last_scan_found: number
+          last_scan_message: string | null
+          last_scan_new: number
+          last_scan_status: string | null
+          name: string
+          scan_interval_minutes: number | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          base_url: string
+          config?: Json
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          last_scan_at?: string | null
+          last_scan_found?: number
+          last_scan_message?: string | null
+          last_scan_new?: number
+          last_scan_status?: string | null
+          name: string
+          scan_interval_minutes?: number | null
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          base_url?: string
+          config?: Json
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          last_scan_at?: string | null
+          last_scan_found?: number
+          last_scan_message?: string | null
+          last_scan_new?: number
+          last_scan_status?: string | null
+          name?: string
+          scan_interval_minutes?: number | null
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       sync_runs: {
         Row: {
