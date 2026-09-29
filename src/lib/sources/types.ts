@@ -54,7 +54,7 @@ export type ScanResult = { found: number; new: number; updated: number; errors: 
 export function detectVideoType(url: string): VideoType {
   const lower = url.toLowerCase()
   if (lower.includes('youtube.com') || lower.includes('youtu.be')) return 'youtube'
-  const path = lower.split(/[?#]/)[0]
+  const path = lower.split(/[?#]/)[0] ?? ''
   if (path.endsWith('.m3u8')) return 'hls'
   if (path.endsWith('.mp4')) return 'mp4'
   return 'embed'

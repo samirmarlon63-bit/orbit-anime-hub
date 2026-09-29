@@ -120,6 +120,6 @@ export async function syncAll(db: Db, opts: { onlyDue?: boolean } = {}) {
   const settled = await Promise.allSettled(providers.map((p, i) => new Promise<ScanResult>(resolve => setTimeout(() => resolve(syncProvider(p, db)), i * 2000))))
   return providers.map((p, i) => {
     const s = settled[i]
-    return { id: p.id, name: p.name, ...(s.status === 'fulfilled' ? s.value : { found: 0, new: 0, updated: 0, errors: [String(s.reason)] }) }
+    return { id: p.id, name: p.name, ...(s?.status === 'fulfilled' ? s.value : { found: 0, new: 0, updated: 0, errors: [String(s?.status === 'rejected' ? s.reason : 'Error')] }) }
   })
 }
