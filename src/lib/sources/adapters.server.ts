@@ -35,13 +35,13 @@ const rssAdapter: SourceAdapter = {
   async scan(p) {
     const doc = xml.parse(await fetchText(p.baseUrl, 'application/rss+xml, application/atom+xml, application/xml')) as Record<string, unknown>
     const rss = getPath(doc, 'rss.channel.item')
-    if (rss) return arr(rss as Record<string, unknown>[]).map(i => ({ title: text(i.title), url: text(i.link), date: text(i.pubDate) || null }))
+    if (rss) return arr(rss as Record<string, unknown>[]).map(i => ({ title: text(i['title']), url: text(i['link']), date: text(i['pubDate']) || null }))
     const entries = arr(getPath(doc, 'feed.entry') as Record<string, unknown>[])
     if (!entries.length && !getPath(doc, 'feed')) throw new Error('No es un feed RSS o Atom válido')
     return entries.map(e => {
-      const links = arr(e.link as Record<string, unknown>[])
+      const links = arr(e['link'] as Record<string, unknown>[])
       const link = links.find(l => !l['@_rel'] || l['@_rel'] === 'alternate') ?? links[0]
-      return { title: text(e.title), url: link ? String(link['@_href'] ?? '') : '', date: text(e.updated) || null }
+      return { title: text(e['title']), url: link ? String(link['@_href'] ?? '') : '', date: text(e['updated']) || null }
     })
   },
 }
@@ -59,10 +59,10 @@ const sitemapAdapter: SourceAdapter = {
   async scan(p) {
     const read = async (url: string) => xml.parse(await fetchText(url, 'application/xml')) as Record<string, unknown>
     const doc = await read(p.baseUrl)
-    let locs = arr(getPath(doc, 'urlset.url') as Record<string, unknown>[]).map(u => ({ url: text(u.loc), date: text(u.lastmod) || null }))
+    let locs = arr(getPath(doc, 'urlset.url') as Record<string, unknown>[]).map(u => ({ url: text(u['loc']), date: text(u['lastmod']) || null }))
     const children = arr(getPath(doc, 'sitemapindex.sitemap') as Record<string, unknown>[]).map(s => text(s.loc)).slice(0, 10)
     for (const child of children) {
-      try { locs = locs.concat(arr(getPath(await read(child), 'urlset.url') as Record<string, unknown>[]).map(u => ({ url: text(u.loc), date: text(u.lastmod) || null }))) } catch { /* ignora sitemap hijo roto */ }
+      try { locs = locs.concat(arr(getPath(await read(child), 'urlset.url') as Record<string, unknown>[]).map(u => ({ url: text(u['loc']), date: text(u['lastmod']) || null }))) } catch { /* ignora sitemap hijo roto */ }
     }
     const re = p.config.urlPattern ? new RegExp(p.config.urlPattern, 'i') : null
     return locs.filter(l => !re || re.test(l.url)).map(l => {
