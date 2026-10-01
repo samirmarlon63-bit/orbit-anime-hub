@@ -23,12 +23,10 @@ export async function testAuto(p: SourceProvider): Promise<ScanResult> {
 export async function syncAuto(p: SourceProvider, admin: Db): Promise<ScanResult> {
   const sourceName = `orbit:${p.id}`
   // Reproducciones ya conocidas para no repetir peticiones.
-  const { data: knownRows } = await admin.from('video_animes').select('id,video_episodes(id,video_sources(url,label))').eq('source_name', sourceName)
-  const knownPlay = new Map<string, string>()
-  const { data: pageRows } = await admin.from('discovered_episodes').select('url,anime_title').eq('provider_id', p.id)
-  void pageRows
-  void knownRows
-  const analysis = await analyzeSite(p.baseUrl, { knownPlay })
+  const { data: knownRows } = await admin.from('video_animes').select('external_slug,video_episodes(number,video_sources(url,label,kind))').eq('source_name', sourceName)
+  const known = new Map<string, string>()
+  for (const v of knownRows ?? []) for (const e of v.video_episodes ?? []) for (const s of e.video_sources ?? []) if (s.label === p.name && s.kind !== 'external') known.set(`${v.external_slug}|${Number(e.number)}`, s.url)
+  const analysis = await analyzeSite(p.baseUrl, { knownPlay: (k, ep) => known.get(`${k}|${ep}`) })
   const result: ScanResult = { found: analysis.contents.length, new: 0, updated: 0, contents: analysis.contents.length, chapters: 0, newContents: 0, errors: [...analysis.errors] }
   if (!analysis.contents.length) throw new Error(['No se detectaron contenidos; se conservan los datos existentes', ...analysis.errors.slice(0, 3)].join(' · '))
 

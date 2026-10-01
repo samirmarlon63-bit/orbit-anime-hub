@@ -155,7 +155,7 @@ function fromFeed(xml: string, base: string): DiscoveredContent[] {
  * Analiza una web: WEB → CONTENIDOS → METADATOS → CAPÍTULOS → REPRODUCCIÓN.
  * `knownPlay` contiene URLs de páginas de capítulo cuya reproducción ya conocemos, para no volver a pedirlas.
  */
-export async function analyzeSite(url: string, opts: { knownPlay?: Map<string, string>; maxContents?: number; maxPlayerFetches?: number } = {}): Promise<AnalysisResult> {
+export async function analyzeSite(url: string, opts: { knownPlay?: (contentKey: string, episode: number) => string | undefined; maxContents?: number; maxPlayerFetches?: number } = {}): Promise<AnalysisResult> {
   const errors: string[] = []
   const html = await politeFetch(url)
   const root = parseHtml(html)
@@ -204,7 +204,7 @@ export async function analyzeSite(url: string, opts: { knownPlay?: Map<string, s
   const pending: DiscoveredChapter[] = []
   for (const c of contents) for (const ch of c.chapters) {
     if (ch.playUrl) continue
-    const known = opts.knownPlay?.get(ch.pageUrl)
+    const known = opts.knownPlay?.(c.key, ch.episode)
     if (known) { ch.playUrl = known; ch.type = detectVideoType(known) } else pending.push(ch)
   }
   await pool(pending.slice(-budget), 3, async ch => {
