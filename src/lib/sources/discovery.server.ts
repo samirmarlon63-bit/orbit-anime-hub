@@ -132,7 +132,7 @@ async function pool<T, R>(items: T[], size: number, fn: (t: T) => Promise<R>): P
 function fromFeed(xml: string, base: string): DiscoveredContent[] {
   const doc = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '@_' }).parse(xml) as Record<string, any>
   const raw: { title: string; link: string }[] = []
-  const items = doc?.rss?.channel?.item ?? doc?.feed?.entry ?? []
+  const items = doc?.['rss']?.channel?.item ?? doc?.['feed']?.entry ?? []
   for (const it of Array.isArray(items) ? items : [items]) {
     const link = typeof it.link === 'string' ? it.link : Array.isArray(it.link) ? it.link[0]?.['@_href'] : it.link?.['@_href']
     const title = typeof it.title === 'string' ? it.title : it.title?.['#text']
