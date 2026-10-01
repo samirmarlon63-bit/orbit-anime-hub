@@ -16,7 +16,7 @@ type Notifications = { enabled: boolean; new_anime: boolean; new_episode: boolea
 const STORAGE_KEY = 'anime-orbit-settings'
 const DEFAULT_PLAYBACK: Playback = { autoplay: false, continue_playback: true, preferred_quality: '720p' }
 const DEFAULT_NOTIFICATIONS: Notifications = { enabled: true, new_anime: true, new_episode: true }
-const APP_VERSION = import.meta.env.VITE_APP_VERSION || '1.0.0'
+const APP_VERSION = import.meta.env['VITE_APP_VERSION'] || '1.0.0'
 
 export const Route = createFileRoute('/configuracion')({
   head: () => ({ meta: [

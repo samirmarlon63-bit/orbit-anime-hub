@@ -73,7 +73,7 @@ function Saved() {
     )
   }
 
-  const saved = data as Anime[] | undefined
+  const saved = data as unknown as Anime[] | undefined
   if (!saved || saved.length === 0) {
     return (
       <Shell title="Guardados" subtitle="Tu colección de anime">
