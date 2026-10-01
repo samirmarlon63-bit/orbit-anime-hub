@@ -355,6 +355,9 @@ export type Database = {
           enabled: boolean
           id: string
           last_scan_at: string | null
+          last_scan_chapters: number
+          last_scan_contents: number
+          last_scan_errors: Json
           last_scan_found: number
           last_scan_message: string | null
           last_scan_new: number
@@ -371,13 +374,16 @@ export type Database = {
           enabled?: boolean
           id?: string
           last_scan_at?: string | null
+          last_scan_chapters?: number
+          last_scan_contents?: number
+          last_scan_errors?: Json
           last_scan_found?: number
           last_scan_message?: string | null
           last_scan_new?: number
           last_scan_status?: string | null
           name: string
           scan_interval_minutes?: number | null
-          type: string
+          type?: string
           updated_at?: string
         }
         Update: {
@@ -387,6 +393,9 @@ export type Database = {
           enabled?: boolean
           id?: string
           last_scan_at?: string | null
+          last_scan_chapters?: number
+          last_scan_contents?: number
+          last_scan_errors?: Json
           last_scan_found?: number
           last_scan_message?: string | null
           last_scan_new?: number
