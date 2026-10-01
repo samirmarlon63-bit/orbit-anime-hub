@@ -1,4 +1,4 @@
-export type SourceType = 'rss' | 'json' | 'sitemap' | 'html'
+export type SourceType = 'auto' | 'rss' | 'json' | 'sitemap' | 'html'
 export type ScanStatus = 'ok' | 'error' | 'running' | null
 export type VideoType = 'youtube' | 'hls' | 'mp4' | 'embed'
 export type Lang = 'sub' | 'dub' | 'neutro'
@@ -31,6 +31,9 @@ export type SourceProvider = {
   lastScanMessage: string | null
   lastScanFound: number
   lastScanNew: number
+  lastScanContents: number
+  lastScanChapters: number
+  lastScanErrors: string[]
 }
 
 export type RawItem = { title: string; url: string; date?: string | null }
@@ -49,7 +52,7 @@ export type DiscoveredEpisode = {
   isNew: boolean
 }
 
-export type ScanResult = { found: number; new: number; updated: number; errors: string[]; preview?: { title: string; episode: number; type: VideoType; lang: Lang; url: string }[] }
+export type ScanResult = { found: number; new: number; updated: number; errors: string[]; contents?: number; chapters?: number; newContents?: number; analysis?: AnalysisPreview; preview?: { title: string; episode: number; type: VideoType; lang: Lang; url: string }[] }
 
 export function detectVideoType(url: string): VideoType {
   const lower = url.toLowerCase()
@@ -61,6 +64,7 @@ export function detectVideoType(url: string): VideoType {
 }
 
 export const CONFIG_FIELDS: Record<SourceType, { key: keyof SourceConfig; label: string; placeholder: string; required?: boolean }[]> = {
+  auto: [],
   rss: [],
   json: [
     { key: 'itemsPath', label: 'Ruta de elementos', placeholder: 'data.episodes', required: true },
@@ -80,3 +84,8 @@ export function regexError(pattern?: string): string | null {
   if (!pattern) return null
   try { new RegExp(pattern, 'i'); return null } catch (e) { return e instanceof Error ? e.message : 'Expresión inválida' }
 }
+
+export type DiscoveredChapter = { episode: number; title: string | null; pageUrl: string; playUrl: string | null; type: VideoType | null }
+export type DiscoveredContent = { key: string; title: string; url: string | null; cover: string | null; description: string | null; chapters: DiscoveredChapter[]; failed?: boolean }
+export type AnalysisResult = { strategy: string; contents: DiscoveredContent[]; errors: string[] }
+export type AnalysisPreview = { strategy: string; contents: { title: string; cover: string | null; hasDescription: boolean; chapters: number; playable: number; first: number | null; last: number | null }[] }

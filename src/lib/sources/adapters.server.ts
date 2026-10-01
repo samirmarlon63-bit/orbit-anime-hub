@@ -60,7 +60,7 @@ const sitemapAdapter: SourceAdapter = {
     const read = async (url: string) => xml.parse(await fetchText(url, 'application/xml')) as Record<string, unknown>
     const doc = await read(p.baseUrl)
     let locs = arr(getPath(doc, 'urlset.url') as Record<string, unknown>[]).map(u => ({ url: text(u['loc']), date: text(u['lastmod']) || null }))
-    const children = arr(getPath(doc, 'sitemapindex.sitemap') as Record<string, unknown>[]).map(s => text(s.loc)).slice(0, 10)
+    const children = arr(getPath(doc, 'sitemapindex.sitemap') as Record<string, unknown>[]).map(s => text(s['loc'])).slice(0, 10)
     for (const child of children) {
       try { locs = locs.concat(arr(getPath(await read(child), 'urlset.url') as Record<string, unknown>[]).map(u => ({ url: text(u['loc']), date: text(u['lastmod']) || null }))) } catch { /* ignora sitemap hijo roto */ }
     }
@@ -88,4 +88,4 @@ const htmlAdapter: SourceAdapter = {
   },
 }
 
-export const adapters: Record<SourceType, SourceAdapter> = { rss: rssAdapter, json: jsonAdapter, sitemap: sitemapAdapter, html: htmlAdapter }
+export const adapters: Record<Exclude<SourceType, 'auto'>, SourceAdapter> = { rss: rssAdapter, json: jsonAdapter, sitemap: sitemapAdapter, html: htmlAdapter }
