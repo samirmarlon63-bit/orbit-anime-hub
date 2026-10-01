@@ -11,7 +11,7 @@ const configSchema = z.object({
 })
 const providerInput = z.object({
   id: z.string().uuid().optional(), name: z.string().trim().min(1).max(100), baseUrl: z.string().url().refine(u => u.startsWith('https://'), 'Usa una dirección HTTPS'),
-  type: z.enum(['rss', 'json', 'sitemap', 'html']), config: configSchema, enabled: z.boolean(), scanIntervalMinutes: z.number().int().min(5).max(10080).nullable(),
+  type: z.enum(['auto', 'rss', 'json', 'sitemap', 'html']), config: configSchema, enabled: z.boolean(), scanIntervalMinutes: z.number().int().min(5).max(10080).nullable(),
 }).superRefine((v, ctx) => {
   if (v.type === 'json' && (!v.config.itemsPath || !v.config.titleField || !v.config.urlField)) ctx.addIssue({ code: 'custom', message: 'Completa ruta, título y enlace' })
   if (v.type === 'html' && (!v.config.itemSelector || !v.config.titleSelector || !v.config.linkSelector)) ctx.addIssue({ code: 'custom', message: 'Completa los tres selectores' })
@@ -23,7 +23,7 @@ async function assertAdmin(context: { supabase: import('@supabase/supabase-js').
   if (!data) throw new Error('Acceso restringido')
 }
 const clean = (c: ProviderInput['config']) => Object.fromEntries(Object.entries(c).filter(([, v]) => v !== undefined && v !== ''))
-const toTemp = (d: ProviderInput) => ({ id: d.id ?? '00000000-0000-0000-0000-000000000000', name: d.name, baseUrl: d.baseUrl, type: d.type, config: clean(d.config), enabled: d.enabled, scanIntervalMinutes: d.scanIntervalMinutes, lastScanAt: null, lastScanStatus: null, lastScanMessage: null, lastScanFound: 0, lastScanNew: 0 })
+const toTemp = (d: ProviderInput) => ({ id: d.id ?? '00000000-0000-0000-0000-000000000000', name: d.name, baseUrl: d.baseUrl, type: d.type, config: clean(d.config), enabled: d.enabled, scanIntervalMinutes: d.scanIntervalMinutes, lastScanAt: null, lastScanStatus: null, lastScanMessage: null, lastScanFound: 0, lastScanNew: 0, lastScanContents: 0, lastScanChapters: 0, lastScanErrors: [] })
 
 export const listSources = createServerFn({ method: 'GET' }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
   await assertAdmin(context)
@@ -33,7 +33,7 @@ export const listSources = createServerFn({ method: 'GET' }).middleware([require
     context.supabase.from('app_settings').select('value').eq('key', 'scan_interval_minutes').maybeSingle(),
   ])
   if (p.error) throw p.error
-  return { providers: (p.data ?? []).map(rowToProvider), globalInterval: Number(s.data?.value ?? 60) || 60 }
+  return { providers: (p.data ?? []).map(rowToProvider), globalInterval: Number(s.data?.value ?? 300) || 300 }
 })
 
 export const saveSource = createServerFn({ method: 'POST' }).middleware([requireSupabaseAuth]).inputValidator((v: ProviderInput) => providerInput.parse(v)).handler(async ({ context, data }) => {
