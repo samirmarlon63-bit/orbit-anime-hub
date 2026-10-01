@@ -9,7 +9,7 @@ const MAX_PER_PROVIDER = 500
 const MIN_GAP_MS = 60_000
 
 export function rowToProvider(r: ProviderRow): SourceProvider {
-  return { id: r.id, name: r.name, baseUrl: r.base_url, type: r.type as SourceProvider['type'], config: (r.config ?? {}) as SourceConfig, enabled: r.enabled, scanIntervalMinutes: r.scan_interval_minutes, lastScanAt: r.last_scan_at, lastScanStatus: r.last_scan_status as SourceProvider['lastScanStatus'], lastScanMessage: r.last_scan_message, lastScanFound: r.last_scan_found, lastScanNew: r.last_scan_new }
+  return { id: r.id, name: r.name, baseUrl: r.base_url, type: r.type as SourceProvider['type'], config: (r.config ?? {}) as SourceConfig, enabled: r.enabled, scanIntervalMinutes: r.scan_interval_minutes, lastScanAt: r.last_scan_at, lastScanStatus: r.last_scan_status as SourceProvider['lastScanStatus'], lastScanMessage: r.last_scan_message, lastScanFound: r.last_scan_found, lastScanNew: r.last_scan_new, lastScanContents: r.last_scan_contents, lastScanChapters: r.last_scan_chapters, lastScanErrors: Array.isArray(r.last_scan_errors) ? (r.last_scan_errors as string[]) : [] }
 }
 
 const slug = (s: string) => s.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -59,6 +59,7 @@ export async function normalize(item: RawItem, p: SourceProvider, single: boolea
 }
 
 export async function scanOnly(p: SourceProvider, db: Db) {
+  if (p.type === 'auto') throw new Error('Tipo automático')
   const raw = await adapters[p.type].scan(p)
   const catalog = await loadCatalog(db)
   const items: DiscoveredEpisode[] = []
@@ -68,6 +69,7 @@ export async function scanOnly(p: SourceProvider, db: Db) {
 }
 
 export async function testProvider(p: SourceProvider, db: Db): Promise<ScanResult> {
+  if (p.type === 'auto') { const { testAuto } = await import('./auto.server'); return testAuto(p) }
   try {
     const { raw, items } = await scanOnly(p, db)
     return { found: raw, new: items.length, updated: 0, errors: [], preview: items.slice(0, 10).map(i => ({ title: i.animeTitle, episode: i.episode, type: i.type, lang: i.lang, url: i.url })) }
@@ -79,6 +81,21 @@ export async function syncProvider(p: SourceProvider, db: Db, force = false): Pr
   if (p.lastScanStatus === 'running' && p.lastScanAt && Date.now() - new Date(p.lastScanAt).getTime() < 10 * 60_000) return { found: 0, new: 0, updated: 0, errors: ['Ya hay un escaneo en curso'] }
   await db.from('source_providers').update({ last_scan_status: 'running', last_scan_at: new Date().toISOString() }).eq('id', p.id)
   const result: ScanResult = { found: 0, new: 0, updated: 0, errors: [] }
+  if (p.type === 'auto') {
+    try {
+      const { syncAuto } = await import('./auto.server')
+      const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+      const r = await syncAuto(p, supabaseAdmin)
+      const msg = `${r.contents} contenidos, ${r.chapters} capítulos, ${r.new} nuevos${r.errors.length ? `, ${r.errors.length} avisos` : ''}`
+      await db.from('source_providers').update({ last_scan_status: 'ok', last_scan_at: new Date().toISOString(), last_scan_message: msg, last_scan_found: r.found, last_scan_new: r.new, last_scan_contents: r.contents ?? 0, last_scan_chapters: r.chapters ?? 0, last_scan_errors: r.errors.slice(0, 30) }).eq('id', p.id)
+      return r
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      // Error: se registra y se conservan contadores y datos anteriores.
+      await db.from('source_providers').update({ last_scan_status: 'error', last_scan_at: new Date().toISOString(), last_scan_message: msg, last_scan_errors: [msg] }).eq('id', p.id)
+      return { ...result, errors: [msg] }
+    }
+  }
   try {
     const { raw, items } = await scanOnly(p, db)
     result.found = raw
@@ -112,7 +129,7 @@ export async function syncAll(db: Db, opts: { onlyDue?: boolean } = {}) {
     db.from('source_providers').select('*').eq('enabled', true),
     db.from('app_settings').select('value').eq('key', 'scan_interval_minutes').maybeSingle(),
   ])
-  const globalInterval = Number((setting?.value as Json) ?? 60) || 60
+  const globalInterval = Number((setting?.value as Json) ?? 300) || 300
   const providers = (rows ?? []).map(rowToProvider).filter(p => {
     if (!opts.onlyDue || !p.lastScanAt) return true
     return Date.now() - new Date(p.lastScanAt).getTime() >= (p.scanIntervalMinutes ?? globalInterval) * 60_000
