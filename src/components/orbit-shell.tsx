@@ -42,17 +42,25 @@ export function Shell({ children, title, subtitle, back }: { children?: ReactNod
         {children}
       </div>
 
-      <nav className="glass fixed inset-x-0 bottom-0 z-40 mx-auto flex h-[calc(72px+env(safe-area-inset-bottom))] max-w-md items-start justify-around border-t border-border/70 px-3 py-2">
-        {tabs.map(({ to, icon: Icon, label }) => {
-          const isActive = path === to
+      <nav className="glass fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+12px)] z-40 mx-auto flex h-[66px] max-w-md items-center rounded-[26px] border border-border/50 px-2 shadow-[var(--shadow-float)]">
+        {tabs.map(({ to, icon: Icon, label }, i) => {
+          const isActive = path === to || (to !== '/' && path.startsWith(to))
           return (
             <Link
               key={to}
               to={to}
-              className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-[11px] font-medium transition ${isActive ? 'text-primary' : 'text-muted-foreground'}`}
+              className="group relative z-10 flex h-full flex-1 flex-col items-center justify-center gap-1 rounded-[20px] px-1 text-muted-foreground transition-all duration-300 ease-out active:scale-95 active:bg-foreground/5"
+              {...(isActive ? { 'data-active': true } : {})}
             >
-              <Icon size={18} strokeWidth={2.2} />
-              <span>{label}</span>
+              <span className={`flex h-6 items-center transition-transform duration-300 ease-out ${isActive ? 'scale-105 text-primary' : 'group-active:scale-95'}`}>
+                <Icon size={19} strokeWidth={isActive ? 2.3 : 2} className="transition-colors duration-300" />
+              </span>
+              <span className={`whitespace-nowrap text-[10px] leading-none tracking-tight transition-colors duration-300 ${isActive ? 'font-semibold text-primary' : 'font-medium'}`}>
+                {label}
+              </span>
+              {isActive && (
+                <span aria-hidden className="pointer-events-none absolute inset-x-2 top-1/2 -z-10 h-12 -translate-y-1/2 rounded-[20px] bg-primary/10 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]" />
+              )}
             </Link>
           )
         })}
