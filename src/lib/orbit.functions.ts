@@ -91,3 +91,22 @@ export const adminAction = createServerFn({ method: 'POST' }).middleware([requir
   }
   return { ok: true }
 })
+
+/** Obtiene los reproductores reales del episodio leyendo de nuevo la página original (tokens temporales siempre frescos). */
+export const getPlayers = createServerFn({ method: 'GET' }).inputValidator((v: string) => z.string().uuid().parse(v)).handler(async ({ data }) => {
+  const db = await publicClient()
+  const { data: rows, error } = await db.from('video_sources').select('label,kind,url,page_url').eq('episode_id', data)
+  if (error) throw error
+  const { resolvePlayers, kindOfUrl, langOf } = await import('@/lib/sources/players.server')
+  const options: { label: string; lang: 'sub' | 'latino' | null; kind: 'iframe' | 'youtube' | 'mp4' | 'hls'; url: string }[] = []
+  const errors: string[] = []
+  for (const r of rows ?? []) {
+    let live: typeof options = []
+    if (r.page_url) { try { live = await resolvePlayers(r.page_url) } catch (e) { errors.push(e instanceof Error ? e.message : String(e)) } }
+    if (live.length) options.push(...live)
+    else if (r.kind !== 'external' && r.url.startsWith('https://')) options.push({ label: r.label, lang: langOf(r.label), kind: kindOfUrl(r.url), url: r.url })
+  }
+  const unique = [...new Map(options.map(o => [o.url, o])).values()]
+  const external = (rows ?? []).find(r => r.page_url)?.page_url ?? null
+  return { options: unique, external, error: unique.length ? null : errors[0] ?? null }
+})
