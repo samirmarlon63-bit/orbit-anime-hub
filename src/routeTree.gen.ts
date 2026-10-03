@@ -57,9 +57,9 @@ const VideosIndexRoute = VideosIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const VideosIdRoute = VideosIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => VideosRoute,
+  id: '/videos/$id',
+  path: '/videos/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicScanSourcesRoute = ApiPublicScanSourcesRouteImport.update({
   id: '/api/public/scan-sources',
@@ -166,6 +166,7 @@ export interface RootRouteChildren {
   ConfiguracionRoute: typeof ConfiguracionRoute
   GuardadosRoute: typeof GuardadosRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  VideosIdRoute: typeof VideosIdRoute
   VideosIndexRoute: typeof VideosIndexRoute
   ApiPublicScanSourcesRoute: typeof ApiPublicScanSourcesRoute
   ApiPublicSyncRoute: typeof ApiPublicSyncRoute
@@ -225,10 +226,10 @@ declare module '@tanstack/react-router' {
     }
     '/videos/$id': {
       id: '/videos/$id'
-      path: '/$id'
+      path: '/videos/$id'
       fullPath: '/videos/$id'
       preLoaderRoute: typeof VideosIdRouteImport
-      parentRoute: typeof VideosRoute
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/scan-sources': {
       id: '/api/public/scan-sources'
@@ -261,6 +262,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConfiguracionRoute: ConfiguracionRoute,
   GuardadosRoute: GuardadosRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  VideosIdRoute: VideosIdRoute,
   VideosIndexRoute: VideosIndexRoute,
   ApiPublicScanSourcesRoute: ApiPublicScanSourcesRoute,
   ApiPublicSyncRoute: ApiPublicSyncRoute,
