@@ -15,7 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ConfiguracionRouteImport } from './routes/configuracion'
 import { Route as GuardadosRouteImport } from './routes/guardados'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as VideosRouteImport } from './routes/videos'
+import { Route as VideosIndexRouteImport } from './routes/videos.index'
 import { Route as VideosIdRouteImport } from './routes/videos.$id'
 import { Route as ApiPublicScanSourcesRouteImport } from './routes/api/public/scan-sources'
 import { Route as ApiPublicSyncRouteImport } from './routes/api/public/sync'
@@ -51,15 +51,15 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VideosRoute = VideosRouteImport.update({
-  id: '/videos',
-  path: '/videos',
+const VideosIndexRoute = VideosIndexRouteImport.update({
+  id: '/videos/',
+  path: '/videos/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VideosIdRoute = VideosIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => VideosRoute,
+  id: '/videos/$id',
+  path: '/videos/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicScanSourcesRoute = ApiPublicScanSourcesRouteImport.update({
   id: '/api/public/scan-sources',
@@ -84,8 +84,8 @@ export interface FileRoutesByFullPath {
   '/configuracion': typeof ConfiguracionRoute
   '/guardados': typeof GuardadosRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/videos': typeof VideosRouteWithChildren
   '/videos/$id': typeof VideosIdRoute
+  '/videos/': typeof VideosIndexRoute
   '/api/public/scan-sources': typeof ApiPublicScanSourcesRoute
   '/api/public/sync': typeof ApiPublicSyncRoute
   '/api/public/sync-videos': typeof ApiPublicSyncVideosRoute
@@ -97,8 +97,8 @@ export interface FileRoutesByTo {
   '/configuracion': typeof ConfiguracionRoute
   '/guardados': typeof GuardadosRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/videos': typeof VideosRouteWithChildren
   '/videos/$id': typeof VideosIdRoute
+  '/videos': typeof VideosIndexRoute
   '/api/public/scan-sources': typeof ApiPublicScanSourcesRoute
   '/api/public/sync': typeof ApiPublicSyncRoute
   '/api/public/sync-videos': typeof ApiPublicSyncVideosRoute
@@ -111,8 +111,8 @@ export interface FileRoutesById {
   '/configuracion': typeof ConfiguracionRoute
   '/guardados': typeof GuardadosRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/videos': typeof VideosRouteWithChildren
   '/videos/$id': typeof VideosIdRoute
+  '/videos/': typeof VideosIndexRoute
   '/api/public/scan-sources': typeof ApiPublicScanSourcesRoute
   '/api/public/sync': typeof ApiPublicSyncRoute
   '/api/public/sync-videos': typeof ApiPublicSyncVideosRoute
@@ -126,8 +126,8 @@ export interface FileRouteTypes {
     | '/configuracion'
     | '/guardados'
     | '/reset-password'
-    | '/videos'
     | '/videos/$id'
+    | '/videos/'
     | '/api/public/scan-sources'
     | '/api/public/sync'
     | '/api/public/sync-videos'
@@ -139,8 +139,8 @@ export interface FileRouteTypes {
     | '/configuracion'
     | '/guardados'
     | '/reset-password'
-    | '/videos'
     | '/videos/$id'
+    | '/videos'
     | '/api/public/scan-sources'
     | '/api/public/sync'
     | '/api/public/sync-videos'
@@ -152,8 +152,8 @@ export interface FileRouteTypes {
     | '/configuracion'
     | '/guardados'
     | '/reset-password'
-    | '/videos'
     | '/videos/$id'
+    | '/videos/'
     | '/api/public/scan-sources'
     | '/api/public/sync'
     | '/api/public/sync-videos'
@@ -166,7 +166,8 @@ export interface RootRouteChildren {
   ConfiguracionRoute: typeof ConfiguracionRoute
   GuardadosRoute: typeof GuardadosRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-  VideosRoute: typeof VideosRouteWithChildren
+  VideosIdRoute: typeof VideosIdRoute
+  VideosIndexRoute: typeof VideosIndexRoute
   ApiPublicScanSourcesRoute: typeof ApiPublicScanSourcesRoute
   ApiPublicSyncRoute: typeof ApiPublicSyncRoute
   ApiPublicSyncVideosRoute: typeof ApiPublicSyncVideosRoute
@@ -216,19 +217,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/videos': {
-      id: '/videos'
+    '/videos/': {
+      id: '/videos/'
       path: '/videos'
-      fullPath: '/videos'
-      preLoaderRoute: typeof VideosRouteImport
+      fullPath: '/videos/'
+      preLoaderRoute: typeof VideosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/videos/$id': {
       id: '/videos/$id'
-      path: '/$id'
+      path: '/videos/$id'
       fullPath: '/videos/$id'
       preLoaderRoute: typeof VideosIdRouteImport
-      parentRoute: typeof VideosRoute
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/scan-sources': {
       id: '/api/public/scan-sources'
@@ -254,17 +255,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface VideosRouteChildren {
-  VideosIdRoute: typeof VideosIdRoute
-}
-
-const VideosRouteChildren: VideosRouteChildren = {
-  VideosIdRoute: VideosIdRoute,
-}
-
-const VideosRouteWithChildren =
-  VideosRoute._addFileChildren(VideosRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
@@ -272,7 +262,8 @@ const rootRouteChildren: RootRouteChildren = {
   ConfiguracionRoute: ConfiguracionRoute,
   GuardadosRoute: GuardadosRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-  VideosRoute: VideosRouteWithChildren,
+  VideosIdRoute: VideosIdRoute,
+  VideosIndexRoute: VideosIndexRoute,
   ApiPublicScanSourcesRoute: ApiPublicScanSourcesRoute,
   ApiPublicSyncRoute: ApiPublicSyncRoute,
   ApiPublicSyncVideosRoute: ApiPublicSyncVideosRoute,
