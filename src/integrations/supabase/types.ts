@@ -594,6 +594,7 @@ export type Database = {
           id: string
           kind: string
           label: string
+          page_url: string | null
           updated_at: string
           url: string
         }
@@ -603,6 +604,7 @@ export type Database = {
           id?: string
           kind: string
           label: string
+          page_url?: string | null
           updated_at?: string
           url: string
         }
@@ -612,6 +614,7 @@ export type Database = {
           id?: string
           kind?: string
           label?: string
+          page_url?: string | null
           updated_at?: string
           url?: string
         }
