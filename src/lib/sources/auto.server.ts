@@ -65,9 +65,9 @@ export async function syncAuto(p: SourceProvider, admin: Db): Promise<ScanResult
         const url = ch.playUrl ?? ch.pageUrl
         if (!url.startsWith('https://')) continue
         const mine = ep.video_sources.find(s => s.label === p.name)
-        if (!mine) await admin.from('video_sources').insert({ episode_id: ep.id, label: p.name, kind: kindOf(ch.playUrl ? ch.type : null), url })
+        if (!mine) await admin.from('video_sources').insert({ episode_id: ep.id, label: p.name, kind: kindOf(ch.playUrl ? ch.type : null), url, page_url: ch.pageUrl })
         else if (mine.url !== url && (ch.playUrl || !/^https:\/\//.test(mine.url))) {
-          await admin.from('video_sources').update({ url, kind: kindOf(ch.playUrl ? ch.type : null) }).eq('id', mine.id)
+          await admin.from('video_sources').update({ url, kind: kindOf(ch.playUrl ? ch.type : null), page_url: ch.pageUrl }).eq('id', mine.id)
           await admin.from('video_changes').insert({ video_anime_id: videoId, kind: 'source_changed', old_value: { url: mine.url }, new_value: { url }, source_name: p.name })
           result.updated++
         }

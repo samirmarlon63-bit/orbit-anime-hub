@@ -47,7 +47,7 @@ function imgSrc(el: HTMLElement | null, base: string) {
 export function episodeOf(text: string, url: string): number | null {
   const t = text.match(EP_TEXT) ?? (() => { try { return new URL(url).pathname.match(EP_URL) } catch { return null } })()
   if (t?.[1]) return Number(t[1])
-  const bare = clean(text).match(/^0*(\d{1,4})$/)
+  const bare = clean(text).match(/^0*(\d{1,3})$/)
   return bare?.[1] ? Number(bare[1]) : null
 }
 export const stableKey = (url: string | null, title: string) => {
