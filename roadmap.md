@@ -4,3 +4,4 @@
 - [x] iPhone-styled discovery, bookmarks, videos, settings, authentication, and admin.
 - [x] Verify public browser screens and build signals.
 - [ ] Verify signed-in saves and admin actions with an administrator account and a compatible real video source.
+- [x] Apply supplied four-screen visual reference to public screens while preserving video discovery, playback and administration.
