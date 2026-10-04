@@ -11,3 +11,4 @@
 
 - Public anime and video catalogues use read-only RLS access; personal saves and preferences stay owner-scoped, while administration uses separate role rows and server verification, because catalogue browsing must not require login.
 - Synchronization logic lives in server-only helpers and public cron routes require a shared scheduler credential, because external ingestion must not execute in browsers.
+- The shared Shell owns the four-tab mobile navigation while catalogue and playback routes retain their original data functions, because visual changes must not break public video access.
