@@ -117,7 +117,7 @@ function Settings() {
     <div className="grid min-h-[72px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-border/50 px-4 py-3 text-sm last:border-b-0"><div className="min-w-0"><p className="font-medium text-foreground">{label}</p>{subtitle && <p className="mt-0.5 text-xs text-muted-foreground">{subtitle}</p>}</div>{children}</div>
   )
   const Toggle = ({ checked, onChange }: { checked: boolean; onChange: (value: boolean) => void }) => (
-    <Button type="button" variant="ghost" aria-pressed={checked} onClick={() => onChange(!checked)} className={`relative flex h-7 w-12 items-center rounded-full transition ${checked ? 'bg-primary' : 'bg-secondary'}`}><span className={`absolute h-5 w-5 rounded-full bg-foreground shadow-sm transition ${checked ? 'translate-x-6' : 'translate-x-1'}`} /></Button>
+    <Button type="button" variant="ghost" aria-pressed={checked} onClick={() => onChange(!checked)} className={`relative !flex !h-7 !w-12 !min-w-12 !items-center !rounded-full !p-0 transition ${checked ? 'bg-primary' : 'bg-secondary'}`}><span className={`absolute h-5 w-5 rounded-full bg-foreground shadow-sm transition ${checked ? 'translate-x-6' : 'translate-x-1'}`} /></Button>
   )
 
   return <Shell title="Configuración">
