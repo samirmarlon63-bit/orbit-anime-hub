@@ -14,3 +14,4 @@
 - The shared Shell owns the four-tab mobile navigation while catalogue and playback routes retain their original data functions, because visual changes must not break public video access.
 - Guest collections use device-local IDs while signed-in collections remain owner-scoped in Cloud, because visitors must save anime without exposing anyone else's private collection.
 - Select Nitro's Vercel preset only inside Vercel and proxy Lovable asset paths to the public asset origin, because self-hosted deployments lack Lovable's asset routing and must preserve the default Lovable build.
+- Render catalogue covers without load-event-dependent opacity and suppress referrers on external images, because cached loads and host referrer rules must not leave successfully fetched images invisible.
