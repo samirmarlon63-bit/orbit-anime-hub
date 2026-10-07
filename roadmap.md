@@ -6,3 +6,4 @@
 - [ ] Verify signed-in saves and admin actions with an administrator account and a compatible real video source.
 - [x] Apply supplied four-screen visual reference to public screens while preserving video discovery, playback and administration.
 - [x] Organize video episodes numerically with cover-based rows, allow guest collections on-device, and contain settings switches within their tracks.
+- [ ] Prepare Vercel deployment and portable images; remove Settings “Más” and add the supplied developer photo and verification-style badge.
