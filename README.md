@@ -88,3 +88,31 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Hosting on Vercel
+
+Import the complete repository, not just `public/`. Use Node.js 22.x or newer
+and the supplied `vercel.json`; leave the Output Directory override empty.
+The Vercel environment selects Nitro's Vercel output while Lovable builds keep
+their existing target. Do not use `wrangler.toml` to deploy to Vercel.
+
+Copy the public configuration values already present in your local project to
+Vercel's environment settings for both Preview and Production:
+`VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_URL`, and
+`SUPABASE_PUBLISHABLE_KEY`. Never add private keys with a `VITE_` prefix or commit
+private credentials.
+
+The existing synchronization engine additionally requires
+`SUPABASE_SERVICE_ROLE_KEY` and `LOVABLE_CRON_SECRET` on its server. These managed
+Lovable Cloud credentials cannot be exported from this project. Therefore a
+Vercel deployment is not yet a verified replacement for Cloud's synchronization
+service: keep that service on Lovable Cloud unless a separately supported backend
+migration is completed. Public browsing and user-scoped functions use the public
+configuration above. Configure auth redirect allowlists for the actual Vercel
+domain before using Google sign-in or password reset there.
+
+The asset rewrite forwards `/__l5e/assets-v1/*` to the project's public Lovable
+asset origin so uploaded images do not become 404s on Vercel. Keep that origin
+available, and update the rewrite if its domain changes. Third-party covers may
+still be unavailable if their original hosts remove them or block requests;
+hosting configuration cannot guarantee those external services.

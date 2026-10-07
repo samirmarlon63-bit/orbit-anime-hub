@@ -6,3 +6,6 @@
 - [ ] Verify signed-in saves and admin actions with an administrator account and a compatible real video source.
 - [x] Apply supplied four-screen visual reference to public screens while preserving video discovery, playback and administration.
 - [x] Organize video episodes numerically with cover-based rows, allow guest collections on-device, and contain settings switches within their tracks.
+- [x] Prepare Vercel configuration and asset routing; remove Settings “Más” and add the supplied developer photo and verification-style badge.
+- [ ] Verify an actual Vercel deployment including synchronization; blocked by unavailable managed server credentials and no connected Vercel deployment.
+- [ ] Verify external catalogue cover availability outside the sandbox; original image hosts still reject sandbox requests.
